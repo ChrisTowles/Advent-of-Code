@@ -1,3 +1,8 @@
+
+## Advent of code is per person so shouldn't be checked in.
+
+*.data.txt
+
 # Logs
 logs
 *.log
