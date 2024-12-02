@@ -28,6 +28,14 @@ const parseLines = (input: string[]): ParsedEntry => {
   return result;
 }
 
+const printResult = (result: ParsedEntry) => {
+  const padLength = 15
+  for (let i = 0; i < result.line.length; i++) {
+    console.log(`${i + 1} - line: ${result.line[i].padEnd(padLength, ' ')}`);
+  }
+}
+
+
 // -------------------- tests below this -------------------
 
 
@@ -52,6 +60,7 @@ describe(TITLE, () => {
     const entry = parseLines(getExampleInput())
 
     expect(entry.line[0]).toEqual('test01')
+    // printResult(entry)
 
   })
 
