@@ -2,6 +2,15 @@
 import { beforeAll, describe, expect, test } from 'vitest'
 import { readFileByLines } from '../../utils/read-file'
 
+// Constants
+const YEAR = "2024"
+const DAY = "01"
+
+// Paths
+const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
+const TITLE = `${YEAR}/day-${DAY}`
+
+
 //https://adventofcode.com/2024/day/1
 
 
@@ -165,7 +174,7 @@ describe('2024 Day 01', () => {
   })
 
   test('part 1 - answer', async () => {
-    const testDataRaw = await readFileByLines("2024/day-01/day-01.data.txt")
+    const testDataRaw = await readFileByLines(RAW_DATA_PATH)
     const diffEntries: DiffLine[] = [];
     const ParsedEntry = parseLines(testDataRaw)
     const sortedLine = sortLEntry(ParsedEntry)
@@ -187,7 +196,7 @@ describe('2024 Day 01', () => {
   })
 
   test('part 2 - answer', async () => {
-    const testDataRaw = await readFileByLines("2024/day-01/day-01.data.txt")
+    const testDataRaw = await readFileByLines(RAW_DATA_PATH)
     const entry = parseLines(testDataRaw)
     const similarResult = similarScore(entry);
 

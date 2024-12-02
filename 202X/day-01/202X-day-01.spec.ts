@@ -1,6 +1,16 @@
 import { describe, expect, test } from 'vitest'
 import { readFileByLines } from '../../utils/read-file'
 
+
+// Constants
+const YEAR = "202X"
+const DAY = "01"
+
+// Paths
+const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
+const TITLE = `${YEAR}/day-${DAY}`
+
+
 interface ParsedEntry {
   line: string[];
 }
@@ -18,13 +28,11 @@ const parseLines = (input: string[]): ParsedEntry => {
   return result;
 }
 
-const RAW_DATA_PATH = "template/day-01/202X-day-01.data.txt"
-
 // -------------------- tests below this -------------------
 
 
 
-describe('2023 Day 01', () => {
+describe(TITLE, () => {
 
 
 
