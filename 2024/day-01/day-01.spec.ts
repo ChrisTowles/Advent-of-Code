@@ -1,6 +1,6 @@
 // sum.test.js
 import { beforeAll, describe, expect, test } from 'vitest'
-import { readFileByLines } from '../utils/read-file'
+import { readFileByLines } from '../../utils/read-file'
 
 //https://adventofcode.com/2024/day/1
 
