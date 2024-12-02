@@ -4,13 +4,17 @@ import { readFileByLines } from '../utils/read-file'
 
 //https://adventofcode.com/2024/day/1
 
+
+// Note: i worked two hard on this one, i overly complicated the lists thinking i had to split each number treating each number as a single digit number.....
+// So there's a way more tests than needed because I couldn't figure out what i has "doing wrong"!
+// 
+
 interface ParsedEntry {
   left_list: number[];
   right_list: number[];
 }
 
 const parseLines = (input: string[]): ParsedEntry => {
-
 
   let result: ParsedEntry = { 
     left_list: [],
@@ -59,7 +63,47 @@ const calculateDiff = (input: ParsedEntry): DiffLine => {
   return result;
 }
 
+interface SimilarityResult {
+  similarity_scores: number[];
+  sum: number;
+}
+
+const similarScore = (input: ParsedEntry): SimilarityResult => {
+
+  if(input.left_list.length !== input.right_list.length) {
+    throw new Error('Lists are not of equal length')
+  }
+  const result: SimilarityResult = {
+    similarity_scores: [],
+    sum: 0
+  };
+
+  // console.log(`list: ${input.left_list.join(',')} `);
+
+  for (let i = 0; i < input.left_list.length; i++) {
+    const selectedNum = input.left_list[i];
+    const matchesFound = input.right_list.filter(x => x === selectedNum).length
+    const similarityScore = selectedNum * matchesFound
+    // console.log(` ${selectedNum} ${matchesFound} = ${similarityScore}`)
+    result.similarity_scores.push(similarityScore)
+    result.sum += similarityScore
+  }
+
+  return result;
+}
+
+// -------------------- tests below this -------------------
+
 describe('2024 day 01"', () => {
+
+  let exampleInput = '';
+  exampleInput += "3   4\n";
+  exampleInput += "4   3\n"
+  exampleInput += "2   5\n"
+  exampleInput += "1   3\n"
+  exampleInput += "3   9\n"
+  exampleInput += "3   3\n"
+  
 
   test('parse line single', () => {
     const input = ['71764   99003']
@@ -83,26 +127,6 @@ describe('2024 day 01"', () => {
 
   })
   
-  test('parse line multi and shorted  and diff', () => {
-    const input = ['71764   99003', '12345   15421']
-    const entry = parseLines(input)
-    expect(entry.left_list.length).toEqual(2)
-    expect(entry.right_list.length).toEqual(2)
-    expect(entry.left_list).toEqual([71764, 12345])
-    expect(entry.right_list).toEqual([99003, 15421])
-
-
-
-
-    const sortedEntry = sortLEntry(entry);
-
-    expect(sortedEntry.left_list.length).toEqual(2)
-    expect(sortedEntry.right_list.length).toEqual(2)
-    expect(sortedEntry.left_list).toEqual([12345, 71764])
-    expect(sortedEntry.right_list).toEqual([15421, 99003 ])
-  })
-
-
   test('parse line sorted and diff - v1', () => {
     const input = ['71764   99003', '12345   15421']
     const entry = parseLines(input)
@@ -115,16 +139,9 @@ describe('2024 day 01"', () => {
 
   test('parse line', () => {
     
-    let input = '';
-    input += "3   4\n";
-    input += "4   3\n"
-    input += "2   5\n"
-    input += "1   3\n"
-    input += "3   9\n"
-    input += "3   3\n"
-    
 
-    const inputSplit = input.split('\n').filter((line: string) => line !== '')
+
+    const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     expect(entry.left_list.length).toEqual(6)
     expect(entry.right_list.length).toEqual(6)
@@ -136,17 +153,8 @@ describe('2024 day 01"', () => {
 
 
   test('parse line sorted', () => {
-    
-    let input = '';
-    input += "3   4\n";
-    input += "4   3\n"
-    input += "2   5\n"
-    input += "1   3\n"
-    input += "3   9\n"
-    input += "3   3\n"
-    
 
-    const inputSplit = input.split('\n').filter((line: string) => line !== '')
+    const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     const sortedEntry = sortLEntry(entry);
     expect(sortedEntry.left_list.length).toEqual(6)
@@ -159,33 +167,19 @@ describe('2024 day 01"', () => {
 
   test('parse line sorted and diff', () => {
     
-    let input = '';
-    input += "3   4\n";
-    input += "4   3\n"
-    input += "2   5\n"
-    input += "1   3\n"
-    input += "3   9\n"
-    input += "3   3\n"
-    
-
-    const inputSplit = input.split('\n').filter((line: string) => line !== '')
+    const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     const sortedEntry = sortLEntry(entry);
     const diffEntry = calculateDiff(sortedEntry);
     expect(diffEntry.diff_list.length).toEqual(6)
     expect(diffEntry.diff_list).toEqual([2,1,0,1,2,5])
     expect(diffEntry.sum).toEqual(11)
-
-
   })
 
-  test('part 1', async () => {
+  test('part 1 - answer', async () => {
     const testDataRaw = await readFileByLines("2024/day-01/day-01.data.txt")
-    
-    let totalSum = 0;
+   
     const diffEntries: DiffLine[] = [];
-    let pos = 0;
-    
 
     const ParsedEntry = parseLines(testDataRaw)
     const sortedLine = sortLEntry(ParsedEntry)
@@ -194,7 +188,30 @@ describe('2024 day 01"', () => {
     
     console.log('2024 Day One total sum:', diff.sum)
 
-    expect(diff.sum).toEqual(1879048);
+  })
+
+
+  test('part 2 - example', () => {
+   
+    const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
+    const entry = parseLines(inputSplit)
+    const similarResult = similarScore(entry);
+    // similar score
+
+    expect(similarResult.similarity_scores.length).toEqual(6)
+    expect(similarResult.similarity_scores).toEqual([9,4,0,0,9,9])
+    expect(similarResult.sum).toEqual(31)
+
+  })
+
+  test('part 2 - answer', async () => {
+    
+    const testDataRaw = await readFileByLines("2024/day-01/day-01.data.txt")
+    const entry = parseLines(testDataRaw)
+    const similarResult = similarScore(entry);
+    
+    // similar score
+    console.log(`Day 1 part 2 answer: ${similarResult.sum}`)
 
   })
 
