@@ -11,9 +11,14 @@ Last year I did it in dart, but I didn't push the repo and I only did a first 10
 
 ## Running
 
-
 ```bash
-pnpm i
+
+pnpm install
+
+
 pnpm run test
+
+# or
+nr test
 
 ```

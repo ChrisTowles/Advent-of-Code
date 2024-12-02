@@ -6,8 +6,7 @@ import { readFileByLines } from '../utils/read-file'
 
 
 // Note: i worked two hard on this one, i overly complicated the lists thinking i had to split each number treating each number as a single digit number.....
-// So there's a way more tests than needed because I couldn't figure out what i has "doing wrong"!
-// 
+// So there's a way more tests than needed because I couldn't figure out what i has "doing wrong"! The fun of over thinking!
 
 interface ParsedEntry {
   left_list: number[];
@@ -16,13 +15,12 @@ interface ParsedEntry {
 
 const parseLines = (input: string[]): ParsedEntry => {
 
-  let result: ParsedEntry = { 
+  let result: ParsedEntry = {
     left_list: [],
-    right_list: [] 
+    right_list: []
   };
 
   for (const line of input) {
-  
     const split_list = line.split(' ').filter(line => line !== '');
     result.left_list.push(Number(split_list[0]));
     result.right_list.push(Number(split_list[1]));
@@ -33,10 +31,10 @@ const parseLines = (input: string[]): ParsedEntry => {
 
 
 const sortLEntry = (input: ParsedEntry): ParsedEntry => {
-  return { 
-     left_list: input.left_list.sort(),
-     right_list: input.right_list.sort() 
-    };
+  return {
+    left_list: input.left_list.sort(),
+    right_list: input.right_list.sort()
+  };
 }
 
 interface DiffLine {
@@ -46,7 +44,7 @@ interface DiffLine {
 
 const calculateDiff = (input: ParsedEntry): DiffLine => {
 
-  if(input.left_list.length !== input.right_list.length) {
+  if (input.left_list.length !== input.right_list.length) {
     throw new Error('Lists are not of equal length')
   }
   const result: DiffLine = {
@@ -55,7 +53,7 @@ const calculateDiff = (input: ParsedEntry): DiffLine => {
   };
 
   for (let i = 0; i < input.left_list.length; i++) {
-    const  diff = Math.abs( input.left_list[i] - input.right_list[i] )
+    const diff = Math.abs(input.left_list[i] - input.right_list[i])
     result.diff_list.push(diff)
     result.sum += diff
   }
@@ -70,7 +68,7 @@ interface SimilarityResult {
 
 const similarScore = (input: ParsedEntry): SimilarityResult => {
 
-  if(input.left_list.length !== input.right_list.length) {
+  if (input.left_list.length !== input.right_list.length) {
     throw new Error('Lists are not of equal length')
   }
   const result: SimilarityResult = {
@@ -94,7 +92,7 @@ const similarScore = (input: ParsedEntry): SimilarityResult => {
 
 // -------------------- tests below this -------------------
 
-describe('2024 day 01"', () => {
+describe('2024 Day 01', () => {
 
   let exampleInput = '';
   exampleInput += "3   4\n";
@@ -103,7 +101,7 @@ describe('2024 day 01"', () => {
   exampleInput += "1   3\n"
   exampleInput += "3   9\n"
   exampleInput += "3   3\n"
-  
+
 
   test('parse line single', () => {
     const input = ['71764   99003']
@@ -114,8 +112,8 @@ describe('2024 day 01"', () => {
     expect(entry.left_list).toEqual([71764])
     expect(entry.right_list).toEqual([99003])
   })
-    
-  
+
+
   test('parse line multi', () => {
     const input = ['71764   99003', '12345   15421']
     const entry = parseLines(input)
@@ -126,7 +124,7 @@ describe('2024 day 01"', () => {
     expect(entry.right_list).toEqual([99003, 15421])
 
   })
-  
+
   test('parse line sorted and diff - v1', () => {
     const input = ['71764   99003', '12345   15421']
     const entry = parseLines(input)
@@ -138,81 +136,62 @@ describe('2024 day 01"', () => {
 
 
   test('parse line', () => {
-    
-
-
     const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     expect(entry.left_list.length).toEqual(6)
     expect(entry.right_list.length).toEqual(6)
-    expect(entry.left_list).toEqual([3,4,2,1,3,3])
-    expect(entry.right_list).toEqual([4,3,5,3,9,3])
-
-
+    expect(entry.left_list).toEqual([3, 4, 2, 1, 3, 3])
+    expect(entry.right_list).toEqual([4, 3, 5, 3, 9, 3])
   })
 
-
   test('parse line sorted', () => {
-
     const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     const sortedEntry = sortLEntry(entry);
     expect(sortedEntry.left_list.length).toEqual(6)
     expect(sortedEntry.right_list.length).toEqual(6)
-    expect(sortedEntry.left_list).toEqual([1,2,3,3,3,4])
-    expect(sortedEntry.right_list).toEqual([3,3,3,4,5,9])
-
-
+    expect(sortedEntry.left_list).toEqual([1, 2, 3, 3, 3, 4])
+    expect(sortedEntry.right_list).toEqual([3, 3, 3, 4, 5, 9])
   })
 
   test('parse line sorted and diff', () => {
-    
     const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     const sortedEntry = sortLEntry(entry);
     const diffEntry = calculateDiff(sortedEntry);
     expect(diffEntry.diff_list.length).toEqual(6)
-    expect(diffEntry.diff_list).toEqual([2,1,0,1,2,5])
+    expect(diffEntry.diff_list).toEqual([2, 1, 0, 1, 2, 5])
     expect(diffEntry.sum).toEqual(11)
   })
 
   test('part 1 - answer', async () => {
     const testDataRaw = await readFileByLines("2024/day-01/day-01.data.txt")
-   
     const diffEntries: DiffLine[] = [];
-
     const ParsedEntry = parseLines(testDataRaw)
     const sortedLine = sortLEntry(ParsedEntry)
     const diff = calculateDiff(sortedLine);
     diffEntries.push(diff);
-    
     console.log('2024 Day One total sum:', diff.sum)
-
   })
 
-
   test('part 2 - example', () => {
-   
     const inputSplit = exampleInput.split('\n').filter((line: string) => line !== '')
     const entry = parseLines(inputSplit)
     const similarResult = similarScore(entry);
-    // similar score
 
+    // similar score
     expect(similarResult.similarity_scores.length).toEqual(6)
-    expect(similarResult.similarity_scores).toEqual([9,4,0,0,9,9])
+    expect(similarResult.similarity_scores).toEqual([9, 4, 0, 0, 9, 9])
     expect(similarResult.sum).toEqual(31)
 
   })
 
   test('part 2 - answer', async () => {
-    
     const testDataRaw = await readFileByLines("2024/day-01/day-01.data.txt")
     const entry = parseLines(testDataRaw)
     const similarResult = similarScore(entry);
-    
+
     // similar score
     console.log(`Day 1 part 2 answer: ${similarResult.sum}`)
-
   })
-
 })
