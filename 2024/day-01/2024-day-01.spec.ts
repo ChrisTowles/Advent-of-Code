@@ -180,7 +180,7 @@ describe('2024 Day 01', () => {
     const sortedLine = sortLEntry(ParsedEntry)
     const diff = calculateDiff(sortedLine);
     diffEntries.push(diff);
-    console.log('2024 Day One total sum:', diff.sum)
+    // console.log('2024 Day One total sum:', diff.sum)
   })
 
   test('part 2 - example', () => {
@@ -201,6 +201,6 @@ describe('2024 Day 01', () => {
     const similarResult = similarScore(entry);
 
     // similar score
-    console.log(`Day 1 part 2 answer: ${similarResult.sum}`)
+    // console.log(`Day 1 part 2 answer: ${similarResult.sum}`)
   })
 })

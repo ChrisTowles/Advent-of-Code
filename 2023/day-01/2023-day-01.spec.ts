@@ -185,7 +185,7 @@ describe(TITLE, () => {
     const testDataRaw = await readFileByLines(RAW_DATA_PATH)
 
     const entry = parseLines({ input: testDataRaw })
-    console.log(`${TITLE} result part 1: ${entry.sum}`);
+    // console.log(`${TITLE} result part 1: ${entry.sum}`);
   })
 
   test('replace number works', () => {
@@ -200,7 +200,7 @@ describe(TITLE, () => {
     const testDataRaw = await readFileByLines(RAW_DATA_PATH)
 
     const entry = parseLines({ input: testDataRaw, part2Enabled: true })
-    console.log(`${TITLE} result part 2: ${entry.sum}`);
+    // console.log(`${TITLE} result part 2: ${entry.sum}`);
     // printResult(entry);
   })
 
