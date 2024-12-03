@@ -4,7 +4,7 @@ import { readFileByLines } from '../../utils/read-file'
 
 // Constants
 const YEAR = "202X"
-const DAY = "01"
+const DAY = "0X"
 
 // Paths
 const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`

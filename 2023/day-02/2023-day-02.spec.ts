@@ -145,7 +145,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     const sum = filterGames.entries.filter(x => x.included ).reduce((acc, curr) => acc + curr.gameNumber, 0);
     expect(sum).toEqual(8);
 
-    printResult(filterGames)
+    // printResult(filterGames)
 
   })
 
@@ -156,7 +156,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
     const entry = parseLines(testDataRaw)
 
     const filterGames = filterGamesOnPossibleSet(entry, {red: 12, blue: 13, green: 14})
-    printResult(filterGames)
+    // printResult(filterGames)
     const sum = filterGames.entries.filter(x => x.included ).reduce((acc, curr) => acc + curr.gameNumber, 0);
     // expect(sum).toEqual(1234) // not yet right
   })
