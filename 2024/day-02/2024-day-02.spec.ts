@@ -17,72 +17,88 @@ interface ParsedResult {
 
 interface ParsedEntry {
   line: string;
-  safe: Boolean
+  safe: Boolean;
+  safePart2: Boolean;
 }
 
 const parseLines = (input: string[]): ParsedResult => {
 
   let result: ParsedResult = { entries: [] };
-    
+
 
   for (const line of input) {
 
-    const entry: ParsedEntry = { line,
-      safe: true
-     };
+    const entry: ParsedEntry = {
+      line,
+      safe: false,
+      safePart2: false,
+    };
 
-   
+
     // The levels are either all increasing or all decreasing.
     // Any two adjacent levels differ by at least one and at most three.
 
     const reports = line.split(' ').map(Number)
 
-    const isIncreasing = reports.every((value, index) => {
-      if (reports.length === (index  + 1))  { // if at end of array
-        return true;
+
+    entry.safe = checkIfListIsSafe(reports)
+    if (entry.safe) {
+      entry.safePart2 = true
+    } else {
+
+      // part 2 logic
+
+      const part2SafeList: boolean[] = []
+      for ( let i = 0; i < reports.length; i++) {
+      
+        const copy = [...reports];
+        copy.splice(i, 1)
+        // take one out. 
+        part2SafeList.push(checkIfListIsSafe(copy))
+
       }
-
-      return reports.length > index + 1 && (value < reports[index + 1])
-    })
-   
-    
-    const isDecreasing = reports.every((value, index) => {
-      if (reports.length === (index  + 1))  { // if at end of array
-        return true;
-      }
-
-      return reports.length > index + 1 && (value > reports[index + 1])
-     })
-
-    
-    
-    const maxDif = reports.every((value, index) => {
-      if (reports.length === (index  + 1))  { // if at end of array
-        return true;
-      }
-      const diffVal =  Math.abs(value - reports[index + 1])
-
-      if ( diffVal >= 1 && diffVal <= 3) {
-        return true;
-      } else {
-        return false;
-      }
-    })
-     
-    entry.safe = (isIncreasing || isDecreasing) && maxDif;
-
-
+      entry.safePart2 = part2SafeList.some(safe => safe)
+    }
     result.entries.push(entry)
+   
   }
 
   return result;
 }
 
-const printResult = (result: ParsedResult) => {
-  const padLength = 15
-  for (let i = 0; i < result.entries.length; i++) {
-    console.log(`${i + 1} - line: ${result.entries[i].line.padEnd(padLength, ' ')}`);
-  }
+function checkIfListIsSafe(reports: number[]): boolean {
+  const isIncreasing = reports.every((value, index) => {
+    if (reports.length === (index + 1)) { // if at end of array
+      return true
+    }
+
+    return reports.length > index + 1 && (value < reports[index + 1])
+  })
+
+
+  const isDecreasing = reports.every((value, index) => {
+    if (reports.length === (index + 1)) { // if at end of array
+      return true
+    }
+
+    return reports.length > index + 1 && (value > reports[index + 1])
+  })
+
+
+
+  const maxDif = reports.every((value, index) => {
+    if (reports.length === (index + 1)) { // if at end of array
+      return true
+    }
+    const diffVal = Math.abs(value - reports[index + 1])
+
+    if (diffVal >= 1 && diffVal <= 3) {
+      return true
+    } else {
+      return false
+    }
+  })
+  return (isIncreasing || isDecreasing) && maxDif;
 }
 
 
@@ -95,7 +111,7 @@ describe(TITLE, () => {
 
 
   let getExampleInput = () => {
-    
+
     let data = `
 7 6 4 2 1
 1 2 7 8 9
@@ -104,7 +120,7 @@ describe(TITLE, () => {
 8 6 4 4 1
 1 3 6 7 9
       `;
-      
+
     return data.split('\n').map(line => line.trim()).filter(line => line !== '');
   }
 
@@ -122,12 +138,28 @@ describe(TITLE, () => {
 
 
 
-  test('answer', async () => {
+  test('answer part-1', async () => {
     const testDataRaw = await readFileByLines(RAW_DATA_PATH)
 
     const entry = parseLines(testDataRaw)
-    expect(entry.entries.filter(e => e.safe === true)).toHaveLength(2)
-    // printResult(entry)
+    expect(entry.entries.filter(e => e.safe === true)).toHaveLength(252)
+
+  })
+
+
+  test('test part-2', async () => {
+    const entry = parseLines(getExampleInput())
+    expect(entry.entries.filter(e => e.safePart2 === true)).toHaveLength(4)
+
+  })
+
+
+  test('answer part-2', async () => {
+    const testDataRaw = await readFileByLines(RAW_DATA_PATH)
+
+    const entry = parseLines(testDataRaw)
+    expect(entry.entries.filter(e => e.safePart2 === true)).toHaveLength(324)
+
   })
 
 
