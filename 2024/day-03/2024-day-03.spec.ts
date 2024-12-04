@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { readFileByLines } from '../../utils/read-file'
-
+import { readFile, readFileByLines } from '../../utils/read-file'
 
 // Constants
 const YEAR = "2024"
@@ -17,25 +16,84 @@ interface ParsedResult {
 
 interface ParsedEntry {
   line: string;
+  muls: string[];
+  mulsValue: number[];
+  mulsValuePart2: number[];
 }
 
 const parseLines = (input: string[]): ParsedResult => {
 
   let result: ParsedResult = { entries: [] };
-    
+
 
   for (const line of input) {
-    result.entries.push({ line })
+    const parsedEntry: ParsedEntry = {
+      line: line,
+      muls: [],
+      mulsValue: [],
+      mulsValuePart2: []
+    };
+    const regexMul = /mul\(([0-9]+),([0-9]+)\)/g
+    parsedEntry.mulsValue = parseForValue(line, regexMul)
+
+    // part 2
+
+    const resultOfDont = splitKeepDelimiter(`do\(\)${line}`, 'don\'t\(\)');
+    const resultOfDontAndDo = resultOfDont.map(x => {
+      return splitKeepDelimiter(x, 'do\(\)');
+    }).flatMap(x => x);
+
+
+
+    resultOfDontAndDo.filter(x => x.startsWith('do\(\)')).forEach((x, index) => {
+      const values = parseForValue(x, regexMul);
+      // console.log(x);
+
+      values.forEach((value, index) => { parsedEntry.mulsValuePart2.push(value) });
+    })
+
+    result.entries.push(parsedEntry)
   }
 
   return result;
 }
 
+function parseForValue(line: string, regexMul: RegExp) {
+
+  const mulsValue: number[] = []
+  const matches = line.matchAll(regexMul)
+  for (const match of matches) {
+    mulsValue.push(Number(match[1]) * Number(match[2]))
+  }
+
+  return mulsValue;
+}
+
+function splitKeepDelimiter(str: string, delimiter: string): string[] {
+  return str.split(delimiter).map((x, index) => {
+    if (index === 0) {
+      return x;
+    } else {
+      return `${delimiter}${x}`;
+    }
+  });
+}
+
 const printResult = (result: ParsedResult) => {
   const padLength = 15
-  for (let i = 0; i < result.entries.length; i++) {
-    console.log(`${i + 1} - line: ${result.entries[i].line.padEnd(padLength, ' ')}`);
+
+
+  const printList: any[] = [];
+
+  for (const entry of result.entries) {
+    const printObj = {}
+    // printObj['line'] = entry.line.padEnd(padLength, ' ');
+    printObj['muls'] = entry.muls.join('|')
+    printObj['mulsValue'] = entry.mulsValue.join('|')
+    printList.push(printObj);
+
   }
+  console.table(printList);
 }
 
 
@@ -48,12 +106,11 @@ describe(TITLE, () => {
 
 
   let getExampleInput = () => {
-    
+
     let data = `
-    test01
-    test02
+xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))
       `;
-      
+
     return data.split('\n').map(line => line.trim()).filter(line => line !== '');
   }
 
@@ -62,20 +119,48 @@ describe(TITLE, () => {
   test('parse lines', () => {
     const entry = parseLines(getExampleInput())
 
-    expect(entry.entries[0].line).toEqual('test01')
     // printResult(entry)
+    // expect(entry.entries[0].line).toEqual('test01')
+    expect(entry.entries[0].mulsValue.reduce((acc, curr) => acc + curr, 0)).toEqual(161);
+
 
   })
 
 
 
-  test('answer', async () => {
-    const testDataRaw = await readFileByLines(RAW_DATA_PATH)
+  test('answer: part 1', async () => {
+    const testDataRaw = await readFile(RAW_DATA_PATH)
 
-    const entry = parseLines(testDataRaw)
-    expect(entry.entries[0].line).toEqual('test01')
-    // printResult(entry)
+    const entry = parseLines([testDataRaw])
+    expect(entry.entries[0].mulsValue.reduce((acc, curr) => acc + curr, 0)).toEqual(161289189);
+
   })
 
 
+
+
+  test('parse lines - example part 2', () => {
+    const entry = parseLines(["xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"])
+
+    // printResult(entry)
+
+
+    // expect(entry.entries[0].line).toEqual('test01')
+    expect(entry.entries[0].mulsValuePart2.reduce((acc, curr) => acc + curr, 0)).toEqual(48);
+
+
+  })
+
+
+
+
+  test('answer: part 2', async () => {
+    const testDataRaw = await readFile(RAW_DATA_PATH)
+
+    const entry = parseLines([testDataRaw])
+
+    // printResult(entry)
+    expect(entry.entries[0].mulsValuePart2.reduce((acc, curr) => acc + curr, 0)).toEqual(83595109);
+
+  })
 })

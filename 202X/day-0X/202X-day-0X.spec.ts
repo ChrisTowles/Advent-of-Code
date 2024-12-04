@@ -25,7 +25,11 @@ const parseLines = (input: string[]): ParsedResult => {
     
 
   for (const line of input) {
-    result.entries.push({ line })
+    const parsedEntry: ParsedEntry = { 
+      line: line
+     };
+
+    result.entries.push(parsedEntry)
   }
 
   return result;
@@ -33,9 +37,15 @@ const parseLines = (input: string[]): ParsedResult => {
 
 const printResult = (result: ParsedResult) => {
   const padLength = 15
-  for (let i = 0; i < result.entries.length; i++) {
-    console.log(`${i + 1} - line: ${result.entries[i].line.padEnd(padLength, ' ')}`);
+  const printList: any[] = [];
+
+  for (const entry of result.entries) {
+    const printObj = {}
+    printObj['line'] = entry.line.padEnd(padLength, ' ');
+    printList.push(printObj);
+  
   }
+  console.table(printList);
 }
 
 
