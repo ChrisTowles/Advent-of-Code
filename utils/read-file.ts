@@ -16,6 +16,12 @@ export async function readFileByLines(filePath: string): Promise<string[]> {
 
   // doest read line by line but returns list of lines. 
   let data = await  readFile(filePath)
-  let lines = data.split('\n').filter(line => line.trim() !== '');
+  let lines = splitByNewLinesAndRemoveEmpty(data)
   return lines
+}
+
+export function splitByNewLinesAndRemoveEmpty(value: string): string[] {
+
+  return value.split('\n').map(line => line.trim()).filter(line => line !== '');
+
 }

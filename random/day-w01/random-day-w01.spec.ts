@@ -7,6 +7,7 @@ import { parseRegexp } from 'vitest/utils.js'
 // Constants
 const YEAR = "random"
 const DAY = "w01"
+const PRINT_OUTPUT = false
 
 // Paths
 const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
@@ -51,7 +52,6 @@ const parseLines = (input: string[]): ParsedResult => {
     
       e: false,
     };
-    console.log(line)
 
 
     parsedEntry.entires = line.split('').map(Number)
@@ -175,7 +175,9 @@ const printResult = (result: ParsedResult) => {
     //}
   
   }
-  console.table(printList);
+  if(PRINT_OUTPUT) {
+    console.table(printList);
+  }
 }
 
 function generateCombinations(): string[] {
@@ -224,7 +226,7 @@ describe(TITLE, () => {
 
     const validCount = entry.entries.filter(x => x.valid).length
 
-    console.log(`validCount:`, validCount)
+   // console.log(`validCount:`, validCount)
 
   })
 

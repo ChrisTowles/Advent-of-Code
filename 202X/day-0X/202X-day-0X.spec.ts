@@ -1,14 +1,16 @@
 import { describe, expect, test } from 'vitest'
-import { readFileByLines } from '../../utils/read-file'
+import { readFileByLines, splitByNewLinesAndRemoveEmpty } from '../../utils/read-file'
 
 
 // Constants
 const YEAR = "202X"
 const DAY = "0X"
+const PRINT_OUTPUT = false
 
 // Paths
 const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
 const TITLE = `${YEAR}/day-${DAY}`
+
 
 
 interface ParsedResult {
@@ -17,6 +19,7 @@ interface ParsedResult {
 
 interface ParsedEntry {
   line: string;
+  value: string;
 }
 
 const parseLines = (input: string[]): ParsedResult => {
@@ -26,7 +29,8 @@ const parseLines = (input: string[]): ParsedResult => {
 
   for (const line of input) {
     const parsedEntry: ParsedEntry = { 
-      line: line
+      line: line,
+      value: ''
      };
 
     result.entries.push(parsedEntry)
@@ -45,7 +49,10 @@ const printResult = (result: ParsedResult) => {
     printList.push(printObj);
   
   }
-  console.table(printList);
+  
+  if(PRINT_OUTPUT) {
+    console.table(printList);
+  }
 }
 
 
@@ -55,31 +62,47 @@ const printResult = (result: ParsedResult) => {
 
 describe(TITLE, () => {
 
+  test('example: part 1', () => {
 
-
-  let getExampleInput = () => {
-    
     let data = `
     test01
     test02
       `;
-      
-    return data.split('\n').map(line => line.trim()).filter(line => line !== '');
-  }
 
-
-
-  test('parse lines', () => {
-    const entry = parseLines(getExampleInput())
+    const entry = parseLines(splitByNewLinesAndRemoveEmpty(data))
+    printResult(entry)
 
     expect(entry.entries[0].line).toEqual('test01')
-    // printResult(entry)
 
   })
 
 
 
-  test('answer', async () => {
+  test('answer: part 1', async () => {
+    const testDataRaw = await readFileByLines(RAW_DATA_PATH)
+
+    const entry = parseLines(testDataRaw)
+    expect(entry.entries[0].line).toEqual('test01')
+    // printResult(entry)
+  })
+
+
+  test('example: part 2', () => {
+    let data = `
+    test01
+    test02
+      `;
+
+    const entry = parseLines(splitByNewLinesAndRemoveEmpty(data))
+    // printResult(entry)
+
+    expect(entry.entries[0].line).toEqual('test01')
+
+  })
+
+
+
+  test('answer: part 2', async () => {
     const testDataRaw = await readFileByLines(RAW_DATA_PATH)
 
     const entry = parseLines(testDataRaw)

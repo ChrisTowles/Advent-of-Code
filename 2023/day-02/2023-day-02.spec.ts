@@ -5,6 +5,7 @@ import c from 'tinyrainbow'
 // Constants
 const YEAR = "2023"
 const DAY = "02"
+const PRINT_OUTPUT = false
 
 // Paths
 const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
@@ -87,7 +88,9 @@ const printResult = (result: ParsedResult) => {
     
     // console.log(`${i + 1} - gameNumber: ${entry.gameNumber.toString().padEnd(4, ' ')} - include: ${entry.included}- sets ${entry.sets.map(printGameSet).join('|').padEnd(padLength, ' ')} - original ${entry.line}`);
   }
-  console.table(printList);
+  if(PRINT_OUTPUT) {
+    console.table(printList);
+  }
 }
 
 

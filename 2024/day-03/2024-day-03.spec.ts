@@ -4,6 +4,7 @@ import { readFile, readFileByLines } from '../../utils/read-file'
 // Constants
 const YEAR = "2024"
 const DAY = "03"
+const PRINT_OUTPUT = false
 
 // Paths
 const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
@@ -93,7 +94,9 @@ const printResult = (result: ParsedResult) => {
     printList.push(printObj);
 
   }
-  console.table(printList);
+  if(PRINT_OUTPUT) {
+    console.table(printList);
+  }
 }
 
 
