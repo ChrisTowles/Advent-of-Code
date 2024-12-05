@@ -1,6 +1,8 @@
 
 ## Advent of code is per person so shouldn't be checked in.
 
+temp/
+
 # Logs
 logs
 *.log
