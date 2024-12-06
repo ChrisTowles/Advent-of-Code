@@ -22,6 +22,6 @@ export async function readFileByLines(filePath: string): Promise<string[]> {
 
 export function splitByNewLinesAndRemoveEmpty(value: string): string[] {
 
-  return value.split('\n').map(line => line.trim()).filter(line => line !== '');
+  return value.trim().split('\n').map(line => line.trim());
 
 }

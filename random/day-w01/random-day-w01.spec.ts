@@ -7,7 +7,7 @@ import { parseRegexp } from 'vitest/utils.js'
 // Constants
 const YEAR = "random"
 const DAY = "w01"
-const PRINT_OUTPUT = true
+const PRINT_OUTPUT = false
 
 // Paths
 const RAW_DATA_PATH = `${YEAR}/day-${DAY}/${YEAR}-day-${DAY}.data.txt`
@@ -143,7 +143,7 @@ const printResult = (result: ParsedResult) => {
     printObj['e'] = entry.e
     printList.push(printObj);
   }
-  
+
   if(PRINT_OUTPUT) {
     console.table(printList);
     console.log(`validCount:`, result.entries.length)
