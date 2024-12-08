@@ -39,6 +39,18 @@ const parseLines = (input: string[]): ParsedResult => {
   return result;
 }
 
+const solvePart1 = async(input: ParsedResult): Promise<Number> => {
+
+  return 0;
+}
+
+
+const solvePart2 = async(input: ParsedResult): Promise<Number> => {
+
+  return 0;
+}
+
+
 const printResult = (result: ParsedResult) => {
   const padLength = 15
   const printList: any[] = [];
@@ -62,14 +74,14 @@ const printResult = (result: ParsedResult) => {
 
 describe(TITLE, () => {
 
+  let exampleDataPart1 = `
+  test01
+  test02
+    `;
+
   test('example: part 1', () => {
 
-    let data = `
-    test01
-    test02
-      `;
-
-    const entry = parseLines(splitByNewLinesAndRemoveEmpty(data))
+    const entry = parseLines(splitByNewLinesAndRemoveEmpty(exampleDataPart1))
     printResult(entry)
 
     expect(entry.entries[0].line).toEqual('test01')
@@ -82,22 +94,18 @@ describe(TITLE, () => {
     const testDataRaw = await readFileByLines(RAW_DATA_PATH)
 
     const entry = parseLines(testDataRaw)
-    expect(entry.entries[0].line).toEqual('test01')
-    // printResult(entry)
+    printResult(entry)
+    const answer = await solvePart1(entry)
+    expect(answer).toEqual(0)
+
   })
 
 
-  test('example: part 2', () => {
-    let data = `
-    test01
-    test02
-      `;
-
-    const entry = parseLines(splitByNewLinesAndRemoveEmpty(data))
-    // printResult(entry)
-
-    expect(entry.entries[0].line).toEqual('test01')
-
+  test('example: part 2', async () => {
+    const entry = parseLines(splitByNewLinesAndRemoveEmpty(exampleDataPart1))
+    printResult(entry)
+    const answer = await solvePart2(entry)
+    expect(answer).toEqual(0)
   })
 
 
@@ -106,8 +114,9 @@ describe(TITLE, () => {
     const testDataRaw = await readFileByLines(RAW_DATA_PATH)
 
     const entry = parseLines(testDataRaw)
-    expect(entry.entries[0].line).toEqual('test01')
-    // printResult(entry)
+    const answer = await solvePart2(entry)
+    expect(answer).toEqual(0)
+   
   })
 
 
