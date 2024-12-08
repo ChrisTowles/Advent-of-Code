@@ -79,12 +79,12 @@ describe(TITLE, () => {
   test02
     `;
 
-  test('example: part 1', () => {
+  test('example: part 1', async () => {
 
     const entry = parseLines(splitByNewLinesAndRemoveEmpty(exampleDataPart1))
     printResult(entry)
-
-    expect(entry.entries[0].line).toEqual('test01')
+    const answer = await solvePart1(entry)
+    expect(answer).toEqual(0)
 
   })
 
