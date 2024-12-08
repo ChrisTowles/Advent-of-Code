@@ -73,7 +73,7 @@ const parseLines = (input: string[]): ParsedResult => {
   }
 
   
-  const startPos = result.grid.indexOf(CharCode.GUARD);
+  const startPos = result.grid.indexOf(CharLookup.GUARD);
   if (startPos === -1)  {
     throw new Error("could not find a Guard not found");
   } 
