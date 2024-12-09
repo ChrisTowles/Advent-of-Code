@@ -42,13 +42,15 @@ const parseLines = (input: string[]): ParsedResult => {
   return result;
 }
 // Helper function to check if a result can be produced with the given operators and numbers
-function canProduceResult(testResult: number,operators: Array<(left: number, right: number) => number>, ...[left, right, ...rest]: number[]): boolean {
+function loopToProduceResult(testResult: number,operators: Array<(left: number, right: number) => number>, ...[left, right, ...rest]: number[]): boolean {
   return operators.some(operator => {
     let result = operator(left, right);
     if (rest.length === 0) {
+      // made it to the end. 
       return result === testResult;
     }
-    return canProduceResult(testResult, operators,  result, ...rest);
+    // loop over
+    return loopToProduceResult(testResult, operators,  result, ...rest);
   });
 }
 
@@ -57,7 +59,7 @@ function canProduceResult(testResult: number,operators: Array<(left: number, rig
 function calculateResult(input: ParsedResult, operators: Array<(left: number, right: number) => number>) {
 
   return input.entries
-    .filter((x) => canProduceResult(x.target, operators,  ...x.numbers))
+    .filter((x) => loopToProduceResult(x.target, operators,  ...x.numbers))
     .map(x => x.target)
     .reduce((acc, curr) => acc + curr, 0);
 }
