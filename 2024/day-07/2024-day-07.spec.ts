@@ -55,8 +55,7 @@ function loopToProduceResult(testResult: number,operators: Array<(left: number, 
 }
 
 
-// 
-function calculateResult(input: ParsedResult, operators: Array<(left: number, right: number) => number>) {
+const  calculateResult = (input: ParsedResult, operators: Array<(left: number, right: number) => number>)  => {
 
   return input.entries
     .filter((x) => loopToProduceResult(x.target, operators,  ...x.numbers))
